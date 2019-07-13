@@ -1,0 +1,43 @@
+OneToOne
+To make OneToOne relation we need to configure by the following way into the Student Class
+
+class Student {
+  @OneToOne(cascade = {CascadeType.ALL})
+     // @JoinColumn(name = "laptop_id")
+     private Laptop laptop;
+
+}
+in the above code there we can see the @joinColumn because actually its a join Column.
+
+
+Trouble shouting
+Error : org.hibernate.TransientPropertyValueException: object references an unsaved transient instance
+solve ways :
+1. You should include cascade="all" (if using xml) or cascade=CascadeType.ALL (if using annotations) on your collection mapping.
+   This happens because you have a collection in your entity, and that collection has one or more items which are not present
+   in the database. By specifying the above options you tell hibernate to save them to the database when saving their parent.
+2. I believe this might be just repeat answer, but just to clarify, I got this on a @OneToOne mapping as well as a @OneToMany.
+    In both cases, it was the fact that the Child object I was adding to the Parent wasn't saved in the database yet. So when
+    I added the Child to the Parent, then saved the Parent, Hibernate would toss the "object references an unsaved transient
+    instance - save the transient instance before flushing" message when saving the Parent.
+    Adding in the cascade = {CascadeType.ALL} on the Parent's reference to the Child solved the
+
+
+
+Error two : student = {
+              "name":"John",
+              "laptop": {
+                "name":"HP"
+              }
+             }
+ and controller is  @PostMapping(value = "saveStudent")
+                       public void saveStudent(Student student) {
+                           System.out.println(student.toString());
+                           }
+
+
+ solve way :  @PostMapping(value = "saveStudent")
+                 public void saveStudent(@RequestBody Student student) {
+                     System.out.println(student.toString());
+                    }
+  --- missing @RequestBody
