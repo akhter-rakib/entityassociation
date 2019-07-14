@@ -1,0 +1,9 @@
+OneToMany
+A Employee Can have a list of Books.
+class Employee{
+ @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "Employee_books")
+    private List<Book> books;
+}
+
+If we declare jsut like this there will be a new table created named "Employee_books"
